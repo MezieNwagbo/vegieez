@@ -7,12 +7,12 @@ const BottomBanner = () => {
     <div className="relative mt-24">
       <img
         alt="banner"
-        class="w-full hidden md:block"
+        className="w-full hidden md:block"
         src={assets.bottom_banner_image}
       />
       <img
         alt="banner"
-        class="w-full md:hidden"
+        className="w-full md:hidden"
         src={assets.bottom_banner_image_sm}
       />
 
@@ -24,17 +24,17 @@ const BottomBanner = () => {
 
           {features.map((feature, index) => {
             return (
-              <div class="flex items-center gap-4 mt-2" key={index}>
+              <div className="flex items-center gap-4 mt-2" key={index}>
                 <img
-                  class="md:w-11 w-9"
+                  className="md:w-11 w-9"
                   alt={feature.title}
                   src={feature.icon}
                 />
                 <div>
-                  <h3 class="text-lg md:text-xl font-semibold">
+                  <h3 className="text-lg md:text-xl font-semibold">
                     {feature.title}
                   </h3>
-                  <p class="text-gray-500/70 text-xs md:text-sm">
+                  <p className="text-gray-500/70 text-xs md:text-sm">
                     {feature.description}
                   </p>
                 </div>
