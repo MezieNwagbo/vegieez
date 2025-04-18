@@ -1,8 +1,10 @@
 import { v2 as cloudinary } from "cloudinary";
-import Product from "../models/Product";
+import Product from "../models/Product.js";
 
 // Add product: /api/product/add
 export const addProduct = async (req, res) => {
+  console.log(req.files);
+
   try {
     let productData = JSON.parse(req.body.productData);
 
@@ -12,11 +14,18 @@ export const addProduct = async (req, res) => {
       images.map(async (item) => {
         let result = await cloudinary.uploader.upload(item.path, {
           resource_type: "image",
+          transformation: [
+            { width: 500, height: 500, crop: "scale" },
+            { quality: "auto", fetch_format: "auto" },
+          ],
         });
+        return result.secure_url;
       })
     );
 
-    await Product.create({ ...productData, images: imagesUrl });
+    console.log(imagesUrl);
+
+    await Product.create({ ...productData, image: imagesUrl });
 
     res.json({ success: true, message: "Product added" });
   } catch (error) {

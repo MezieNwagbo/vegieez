@@ -14,12 +14,12 @@ export const register = async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser)
-      return res.json({ success: false, message: "User already exists" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashedPassword });
-
-    console.log("error here");
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -28,7 +28,7 @@ export const register = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true, // Prevent javascript to access cookie
       secure: process.env.NODE_ENV === "production", // use secure cookies in production
-      sameSite: (process.env.NODE_ENV = "prodiction" ? "none" : "strict"), // CSRF protection
+      sameSite: (process.env.NODE_ENV = "production" ? "none" : "strict"), // CSRF protection
       maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiration date
     });
 
@@ -38,7 +38,11 @@ export const register = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    res.json({ success: false, message: error.message });
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+    // res.json({ success: false, message: error.message });
   }
 };
 
@@ -59,7 +63,7 @@ export const login = async (req, res) => {
     if (!user)
       return res.json({
         success: false,
-        message: "Invalide email or password",
+        message: "Invalid email or password",
       });
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -74,7 +78,7 @@ export const login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true, // Prevent javascript to access cookie
       secure: process.env.NODE_ENV === "production", // use secure cookies in production
-      sameSite: (process.env.NODE_ENV = "prodiction" ? "none" : "strict"), // CSRF protection
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // CSRF protection
       maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiration date
     });
 

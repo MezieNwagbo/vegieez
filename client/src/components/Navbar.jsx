@@ -15,6 +15,7 @@ const Navbar = () => {
     searchQuery,
     setSearchQuery,
     getCartCount,
+    axios,
   } = useAppContext();
 
   const closeMobileMenu = () => {
@@ -27,8 +28,18 @@ const Navbar = () => {
   };
 
   const logout = async () => {
-    setUser(null);
-    navigate("/");
+    try {
+      const { data } = await axios.get("/api/user/logout");
+      if (data.success) {
+        setUser(null);
+        navigate("/");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.message);
+    }
   };
 
   useEffect(() => {

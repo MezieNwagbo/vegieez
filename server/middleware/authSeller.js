@@ -10,10 +10,13 @@ const authSeller = async (req, res, next) => {
   try {
     const tokenDecode = jwt.verify(sellerToken, process.env.JWT_SECRET);
 
+    // console.log(tokenDecode);
+
     if (tokenDecode.email === process.env.SELLER_EMAIL) {
       req.user = { userId: tokenDecode.id };
       next();
     } else {
+      console.log("Not authorized");
       return res.json({ success: false, message: "Not authorized" });
     }
   } catch (error) {

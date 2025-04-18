@@ -71,6 +71,7 @@ const ProductDetails = () => {
                   <img
                     src={i < 4 ? assets.star_icon : assets.star_dull_icon}
                     className="md:w-4 w-3.5"
+                    key={i}
                   />
                 ))}
               <p className="text-base ml-2">(4)</p>
