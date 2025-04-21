@@ -104,6 +104,8 @@ export const placeOrderStripe = async (req, res) => {
 // Stripe webhook to verify payments action: /stripe
 
 export const stripeWebhooks = async (request, response) => {
+  console.log("stripe webhok starts here");
+
   // Stripe Gateway initialize
   const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY);
   const sig = request.headers["stripe-signature"];
@@ -122,6 +124,9 @@ export const stripeWebhooks = async (request, response) => {
   // Handle the event
   switch (event.type) {
     case "payment_intent.succeeded": {
+      console.log("hello");
+      console.log(event.type);
+
       const paymentIntent = event.data.object;
       const paymentIntentId = paymentIntent.id;
 
@@ -136,10 +141,12 @@ export const stripeWebhooks = async (request, response) => {
         isPaid: true,
       });
       //Clear user cart
-      await Order.findByIdAndUpdate(userId, { cartItems: {} });
+      await User.findByIdAndUpdate(userId, { cartItems: {} });
       break;
     }
     case "payment_intent.payment_failed": {
+      console.log("faikled here");
+
       const paymentIntent = event.data.object;
       const paymentIntentId = paymentIntent.id;
 
