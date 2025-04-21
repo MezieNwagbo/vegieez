@@ -5,6 +5,8 @@ import connectDB from "./configs/db.js";
 import connectCloudinary from "./configs/cloudinary.js";
 import "dotenv/config";
 
+import dns from "dns";
+
 import userRouter from "./routes/userRoute.js";
 import sellerRouter from "./routes/sellerRoute.js";
 import productRouter from "./routes/productRoute.js";
@@ -22,6 +24,8 @@ await connectCloudinary();
 //allow multiple origins
 const allowedOrigins = ["http://localhost:5173"];
 
+dns.setDefaultResultOrder("ipv4first");
+
 app.post("/stripe", express.raw({ type: "application/json" }), stripeWebhooks),
   // Middleware configuration
   app.use(express.json());
@@ -30,7 +34,6 @@ app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.get("/", (req, res) => res.send("Api is working"));
 app.use("/api/user", userRouter);
-app.use("/api/seller", sellerRouter);
 app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/address", addressRouter);
